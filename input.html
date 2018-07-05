@@ -1,0 +1,224 @@
+<html>
+<head>
+<title> Upload </title>
+</head>
+<body>
+<style>
+html, body {margin:0px; padding: 0px;}
+nav {
+    background-color: #34495e;
+    height: 80px;
+    position: fixed;
+    width: 100vw;
+    top: 0;
+    z-index: 999;
+}
+
+body{
+	width:100%;
+	margin:0px;
+}
+
+#logo {height: 80px; margin-left: 20px;}
+
+.wrapper {
+    padding: 50px 50px;
+    max-width: 1200px;
+	height:40px;
+    text-align: center;
+	font-family:Comic Sans MS;
+	font-size:100px;
+    margin-left: auto;
+    margin-right: auto;
+	margin-top:100px;
+	border: 1px solid blue;
+	
+}
+
+.imgW{
+	padding: 50px 50px;
+	height:40px;
+    text-align: center;
+	font-family:Comic Sans MS;
+	font-size:100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+</style>
+
+<nav>
+    
+</nav>
+<div class="wrapper">
+	<form action="input.php" method="post" accept="image/jpg,image/png,image/jpeg">
+	<table>
+		<tr>
+		<td> Please upload your image here: </td>
+		<td> 	<input type="file" onchange="previewFile()"><br>
+	 	</td>
+		</tr>
+		<tr>
+		<td> Based on the results of your home page, what type of color blindness would you say you have? </td>
+		<td> <input type="button" value="Deuteranopia" onclick="tintImage(
+        document.getElementById('myImage'),
+        '#EE82EE' 
+ );      ">
+		<input type="button" value="Tritanopia" onclick="GBImage(
+        document.getElementById('myImage')
+ );    ">
+		<input type="button" value="Monochromacy" onclick="bbcImage(
+        document.getElementById('myImage')
+ );    "></td>
+		</tr>
+	</table>
+</div>
+<div class="imgW">
+	<img id="myImage" src="" align="center">
+</div>
+</body>
+<script type="text/javascript">
+		function previewFile() {
+  var preview = document.querySelector('img');
+  var file    = document.querySelector('input[type=file]').files[0];
+  var reader  = new FileReader();
+
+  reader.onloadend = function () {
+    preview.src = reader.result;
+  }
+
+  if (file) {
+    reader.readAsDataURL(file);
+  } 
+
+  else {
+    preview.src = "";
+  }
+}
+
+function tintImage(imgElement,tintColor) {
+		var img = imgElement; 
+		//or however you get a handle to the IMG
+		var width = img.clientWidth;
+		var height = img.clientHeight;
+        // create hidden canvas (using image dimensions)
+        var canvas = document.createElement("canvas");
+        canvas.width = imgElement.offsetWidth;
+        canvas.height = imgElement.offsetHeight;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(imgElement,0,0);
+
+        var map = ctx.getImageData(0,0,width,height);
+        var imdata = map.data;
+
+        // convert image to grayscale
+        var r,g,b,avg, t;
+        for(var p = 0, len = imdata.length; p < len; p+=4) {
+            r = imdata[p];
+            g = imdata[p+1];
+            b = imdata[p+2];
+            
+            avg = Math.floor((r+g+b)/3);
+            t=120;
+            imdata[p] = imdata[p];
+            imdata[p+1] = avg;
+            imdata[p+2] = avg;
+        }
+
+        ctx.putImageData(map,0,0);
+
+        // overlay filled rectangle using lighter composition
+        ctx.globalCompositeOperation = "lighter";
+        ctx.globalAlpha = 0.5;
+        //ctx.fillStyle=tintColor;
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+
+        // replace image source with canvas data
+        imgElement.src = canvas.toDataURL();
+    }
+    function bbcImage(imgElement) {
+		var img = imgElement; 
+		//or however you get a handle to the IMG
+		var width = img.clientWidth;
+		var height = img.clientHeight;
+        // create hidden canvas (using image dimensions)
+        var canvas = document.createElement("canvas");
+        canvas.width = imgElement.offsetWidth;
+        canvas.height = imgElement.offsetHeight;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(imgElement,0,0);
+
+        var map = ctx.getImageData(0,0,width,height);
+        var imdata = map.data;
+
+        // convert image to grayscale
+        var r,g,b,avg, t;
+        for(var p = 0, len = imdata.length; p < len; p+=4) {
+            r = imdata[p];
+            g = imdata[p+1];
+            b = imdata[p+2];
+            
+            avg = Math.floor((r+g+b)/3);
+            imdata[p] = avg;
+            imdata[p+1] = avg;
+            imdata[p+2] = avg;
+        }
+
+        ctx.putImageData(map,0,0);
+
+        // overlay filled rectangle using lighter composition
+        ctx.globalCompositeOperation = "lighter";
+        ctx.globalAlpha = 0.5;
+        //ctx.fillStyle=tintColor;
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+
+        // replace image source with canvas data
+        imgElement.src = canvas.toDataURL();
+    }
+
+    function GBImage(imgElement) {
+		var img = imgElement; 
+		//or however you get a handle to the IMG
+		var width = img.clientWidth;
+		var height = img.clientHeight;
+        // create hidden canvas (using image dimensions)
+        var canvas = document.createElement("canvas");
+        canvas.width = imgElement.offsetWidth;
+        canvas.height = imgElement.offsetHeight;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(imgElement,0,0);
+
+        var map = ctx.getImageData(0,0,width,height);
+        var imdata = map.data;
+
+        // convert image to grayscale
+        var r,g,b,avg, t;
+        for(var p = 0, len = imdata.length; p < len; p+=4) {
+            r = imdata[p];
+            g = imdata[p+1];
+            b = imdata[p+2];
+            
+            avg = Math.floor((r+g+b)/3);
+            t=10;
+            imdata[p] = imdata[p+1]*1.50;
+            imdata[p+1] = imdata[p+1]*1.50;
+            imdata[p+2] = imdata[p+2]*1.50;
+        }
+
+        ctx.putImageData(map,0,0);
+
+        // overlay filled rectangle using lighter composition
+        ctx.globalCompositeOperation = "lighter";
+        ctx.globalAlpha = 0.5;
+        //ctx.fillStyle=tintColor;
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+
+        // replace image source with canvas data
+        imgElement.src = canvas.toDataURL();
+    }
+
+</script>
+</html>
+	
